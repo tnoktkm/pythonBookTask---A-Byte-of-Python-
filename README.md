@@ -1,2 +1,2 @@
-# pythonBookTask---A-Byte-of-Python-
-Tasks from book "A Byte of Python" 
+# pythonBookTask---A-Byte-of-Python
+Some tasks from book - "A Byte of Python
