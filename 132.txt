@@ -1,0 +1,7 @@
+with CTE AS (
+	select 1 n, trip_no*2 trip_no,  cast('' as varchar(16)) str from trip
+	UNION ALL
+	select n*2,	trip_no/2, cast(iif(trip_no%2=0,'0'+str,'1'+str) as varchar(16)) from CTE 
+	where n < 65536
+)
+select * from CTE

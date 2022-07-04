@@ -1,0 +1,29 @@
+select * from (
+	select *, iif(a=kef,1,0)+iif(e=kef,1,0)+iif(i=kef,1,0)+iif(o=kef,1,0)+iif(u=kef,1,0) res
+
+
+	from (
+		select *, cast((a+e+i+o+u)/(5.0-zero)*1.0 as numeric(8,2)) kef from (
+			select *, iif(a=0,1,0) + iif(e=0,1,0) + iif(i=0,1,0) + iif(o=0,1,0) + iif(u=0,1,0) as zero
+
+
+
+			from (
+				select len(replace(town_from,' ','')) - len(replace(replace(town_from,' ',''),'a','')) a,
+				len(replace(town_from,' ',''))-len(replace(replace(town_from,' ',''),'e','')) e,
+				len(replace(town_from,' ',''))-len(replace(replace(town_from,' ',''),'i','')) i,
+				len(replace(town_from,' ',''))-len(replace(replace(town_from,' ',''),'o','')) o,
+				len(replace(town_from,' ',''))-len(replace(replace(town_from,' ',''),'u','')) u,
+				town_from	
+
+				from (
+					select town_from from trip
+					union
+					select town_to from trip
+				) m1
+			) m2
+		) m3	
+		where zero < 4
+	) m4
+) m5
+where 5-zero=res

@@ -1,0 +1,28 @@
+select point, da income_date, da + ISNULL(min(case when diff > cnt and DATEPART(dw,da+cnt)!=1  then cnt else null end),max(cnt)+1) incass_date from (
+
+    select point,da,da2, diff, cnt from (       
+
+        select i.point,i.date da,o.date da2, (DATEPART(Day,o.date) - DATEPART(Day,i.date)) diff,
+        count(1) over (partition by i.point, i.date order by o.date rows between unbounded preceding and current row)-1 cnt
+        from income_o i join (
+            select point, date, 1 disabled from outcome_o
+            union
+            select point, DATEADD(DAY,7,date), 1 disabled from income_o
+        ) o
+        on i.point = o.point
+        where o.date >= i.date 
+    ) m1
+
+) oo
+group by point, da
+
+
+
+
+
+
+
+
+
+
+not exists (select * from outcome_o o where o.date=da+cnt and o.point = point)

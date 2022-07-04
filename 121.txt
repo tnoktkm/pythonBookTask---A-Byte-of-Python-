@@ -1,0 +1,7 @@
+select shipname, launched, battles.name from (	
+	select shipname, min(launched) launched, min(date) min from (	
+		select ships.name shipname, launched, battles.name battlename, date, year(date) year from ships, battles
+		where launched <= year(date) and launched IS NOT NULL
+	) m1
+	group by shipname
+) m2 join battles on m2.min = battles.date

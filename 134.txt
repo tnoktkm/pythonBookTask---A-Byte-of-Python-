@@ -1,0 +1,22 @@
+select b_q_id, v_color, 255-sum(vol) need_vol from (
+	select b_q_id, sum(b_vol) vol, v_color from utb join utv on utb.b_v_id=utv.v_id
+	group by b_q_id, v_color
+	union
+	select q_id, 0, 'R' from utq
+	union
+	select q_id, 0, 'B' from utq
+	union
+	select q_id, 0, 'G' from utq
+) m1
+group by b_q_id, v_color
+order by need_vol desc, v_color
+
+
+
+
+
+select v_color, sum(vol) from (
+select b_v_id, v_color, 255-sum(b_vol) vol from utb join utv on utb.b_v_id=utv.v_id
+group by b_v_id, v_color
+) m1
+group by v_color
